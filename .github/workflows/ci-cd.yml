@@ -102,14 +102,20 @@ jobs:
       - name: Build and tag backend image
         working-directory: backend
         run: |
-          docker build -t ${{ secrets.ECR_BACKEND_REPO }}:latest .
-          docker tag ${{ secrets.ECR_BACKEND_REPO }}:latest ${{ secrets.ECR_BACKEND_REPO }}:latest
+            if [ -z "${{ secrets.ECR_BACKEND_REPO }}" ]; then
+              echo "ECR_BACKEND_REPO secret is not set!" && exit 1
+            fi
+            docker build -t ${{ secrets.ECR_BACKEND_REPO }}:latest .
+            docker tag ${{ secrets.ECR_BACKEND_REPO }}:latest ${{ secrets.ECR_BACKEND_REPO }}:latest
 
       - name: Build and tag frontend image
         working-directory: frontend
         run: |
-          docker build -t ${{ secrets.ECR_FRONTEND_REPO }}:latest .
-          docker tag ${{ secrets.ECR_FRONTEND_REPO }}:latest ${{ secrets.ECR_FRONTEND_REPO }}:latest
+            if [ -z "${{ secrets.ECR_FRONTEND_REPO }}" ]; then
+              echo "ECR_FRONTEND_REPO secret is not set!" && exit 1
+            fi
+            docker build -t ${{ secrets.ECR_FRONTEND_REPO }}:latest .
+            docker tag ${{ secrets.ECR_FRONTEND_REPO }}:latest ${{ secrets.ECR_FRONTEND_REPO }}:latest
 
       - name: Push backend image
         run: docker push ${{ secrets.ECR_BACKEND_REPO }}:latest
