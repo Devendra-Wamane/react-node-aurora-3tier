@@ -33,10 +33,9 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install docker-compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+
+      - name: Check Docker Compose Version
+        run: docker compose version
 
       - name: Install backend dependencies
         working-directory: backend
@@ -70,14 +69,16 @@ jobs:
         working-directory: frontend
         run: npm run lint || true
 
+
       - name: Compose up for integration
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Integration test (optional)
         run: echo "Add integration tests here"
 
+
       - name: Compose down
-        run: docker-compose down
+        run: docker compose down
 
   push-to-ecr:
     name: Push Docker Images to ECR
