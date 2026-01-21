@@ -25,13 +25,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
 
       - name: Check Docker Compose Version
         run: docker compose version
@@ -68,13 +65,11 @@ jobs:
         working-directory: frontend
         run: npm run lint || true
 
-
       - name: Compose up for integration
         run: docker compose up -d --build
 
       - name: Integration test (optional)
         run: echo "Add integration tests here"
-
 
       - name: Compose down
         run: docker compose down
@@ -101,20 +96,20 @@ jobs:
       - name: Build and tag backend image
         working-directory: backend
         run: |
-            if [ -z "${{ secrets.ECR_BACKEND_REPO }}" ]; then
-              echo "ECR_BACKEND_REPO secret is not set!" && exit 1
-            fi
-            docker build -t ${{ secrets.ECR_BACKEND_REPO }}:latest .
-            docker tag ${{ secrets.ECR_BACKEND_REPO }}:latest ${{ secrets.ECR_BACKEND_REPO }}:latest
+          if [ -z "${{ secrets.ECR_BACKEND_REPO }}" ]; then
+            echo "ECR_BACKEND_REPO secret is not set!" && exit 1
+          fi
+          docker build -t ${{ secrets.ECR_BACKEND_REPO }}:latest .
+          docker tag ${{ secrets.ECR_BACKEND_REPO }}:latest ${{ secrets.ECR_BACKEND_REPO }}:latest
 
       - name: Build and tag frontend image
         working-directory: frontend
         run: |
-            if [ -z "${{ secrets.ECR_FRONTEND_REPO }}" ]; then
-              echo "ECR_FRONTEND_REPO secret is not set!" && exit 1
-            fi
-            docker build -t ${{ secrets.ECR_FRONTEND_REPO }}:latest .
-            docker tag ${{ secrets.ECR_FRONTEND_REPO }}:latest ${{ secrets.ECR_FRONTEND_REPO }}:latest
+          if [ -z "${{ secrets.ECR_FRONTEND_REPO }}" ]; then
+            echo "ECR_FRONTEND_REPO secret is not set!" && exit 1
+          fi
+          docker build -t ${{ secrets.ECR_FRONTEND_REPO }}:latest .
+          docker tag ${{ secrets.ECR_FRONTEND_REPO }}:latest ${{ secrets.ECR_FRONTEND_REPO }}:latest
 
       - name: Push backend image
         run: docker push ${{ secrets.ECR_BACKEND_REPO }}:latest
